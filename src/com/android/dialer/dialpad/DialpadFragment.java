@@ -16,9 +16,6 @@
 
 package com.android.dialer.dialpad;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -58,9 +55,6 @@ import android.text.TextWatcher;
 import android.text.style.RelativeSizeSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.TranslateAnimation;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -169,8 +163,6 @@ public class DialpadFragment extends Fragment
      * smart dialing suggestion strip is visible.
      */
     private boolean mSmartDialEnabled = false;
-
-    private boolean mSmartDialHidden = false;
 
     /**
      * Regular expression prohibiting manual phone call. Can be empty, which means "no rule".
@@ -1003,7 +995,7 @@ public class DialpadFragment extends Fragment
                 return false;
             }
             case R.id.dialButton: {
-                if (!mSmartDialHidden && isDigitsEmpty()) {
+                if (isDigitsEmpty()) {
                     handleDialButtonClickWithEmptyDigits();
                     // This event should be consumed so that onClick() won't do the exactly same
                     // thing.
