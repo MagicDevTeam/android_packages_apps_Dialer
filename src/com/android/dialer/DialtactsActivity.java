@@ -448,7 +448,11 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
                 break;
             case R.id.voice_search_button:
                 final Intent voiceIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                startActivityForResult(voiceIntent, ACTIVITY_REQUEST_CODE_VOICE_SEARCH);
+                try {
+                    startActivityForResult(voiceIntent, ACTIVITY_REQUEST_CODE_VOICE_SEARCH);
+                } catch (Exception e) {
+                    // TODO: handle exception
+                }
                 break;
             default: {
                 Log.wtf(TAG, "Unexpected onClick event from " + view);
