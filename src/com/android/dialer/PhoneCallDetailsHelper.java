@@ -17,7 +17,9 @@
 package com.android.dialer;
 
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.telephony.PhoneNumberUtils;
@@ -35,6 +37,9 @@ import com.android.dialer.calllog.CallTypeHelper;
 import com.android.dialer.calllog.ContactInfo;
 import com.android.dialer.calllog.PhoneNumberHelper;
 import com.android.dialer.calllog.PhoneNumberUtilsWrapper;
+import com.android.internal.util.mm.DeviceUtils;
+
+import java.util.Locale;
 
 /**
  * Helper class to fill in the views in {@link PhoneCallDetailsViews}.
@@ -133,6 +138,35 @@ public class PhoneCallDetailsHelper {
             numberText = displayNumber;
             labelText = TextUtils.isEmpty(numberFormattedLabel) ? numberText :
                     numberFormattedLabel;
+        }
+
+        final boolean isChineseLocale = (DeviceUtils.isLocale(Locale.CHINA) || DeviceUtils
+                .isLocale(Locale.CHINESE));
+        if (isChineseLocale) {
+            Cursor cr = null;
+            try {
+                cr = views.labelView
+                        .getContext()
+                        .getContentResolver()
+                        .query(Uri.parse("content://com.magicmod.mmgeoprovider/CN/"
+                                + String.valueOf(details.number)), null, null, null, null);
+                if (cr.moveToFirst()) {
+                    String location = cr.getString(0);
+                    views.locationView.setText(location);
+                    views.locationView.setVisibility(TextUtils.isEmpty(location) ? View.INVISIBLE
+                            : View.VISIBLE);
+                }
+            } catch (Exception e) {
+                // TODO: handle exception
+            } finally {
+                if (cr != null && !cr.isClosed()) {
+                    cr.close();
+                }
+            }
+        } else {
+            views.locationView.setText(details.geocode);
+            views.locationView.setVisibility(TextUtils.isEmpty(details.geocode) ? View.INVISIBLE
+                    : View.VISIBLE);
         }
 
         views.nameView.setText(nameText);
