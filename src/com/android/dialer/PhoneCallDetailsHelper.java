@@ -156,6 +156,9 @@ public class PhoneCallDetailsHelper {
                     views.locationView.setVisibility(TextUtils.isEmpty(location) ? View.INVISIBLE
                             : View.VISIBLE);
                 }
+                if (cr != null && !cr.isClosed()) {
+                    cr.close();
+                }
             } catch (Exception e) {
                 // TODO: handle exception
             } finally {
